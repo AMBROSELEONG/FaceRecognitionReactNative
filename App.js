@@ -5,10 +5,15 @@ import * as LocalAuthentication from 'expo-local-authentication';
 export default function App() {
   const onFaceId = async () => {
     try {
+      console.log(LocalAuthentication.isEnrolledAsync());
       const test = await LocalAuthentication.supportedAuthenticationTypesAsync();
       console.log(test); 
       // Checking if device is compatible
-      const isCompatible = await LocalAuthentication.hasHardwareAsync();
+      const isCompatible = await  LocalAuthentication.hasHardwareAsync()
+      .then((value) => {
+        console.log('hasHardwareAsync', value);
+      })
+      .catch((reason) => console.log(reason));
       
       if (!isCompatible) {
         throw new Error('Your device isn\'t compatible.')
@@ -22,7 +27,7 @@ export default function App() {
       }
 
       // Authenticate user
-      await LocalAuthentication.authenticateAsync(2);
+      await LocalAuthentication.authenticateAsync();
 
       Alert.alert('Authenticated', 'Welcome back !')
     } catch (error) {
